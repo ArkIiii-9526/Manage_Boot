@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("S_USER")
-public class User {
-    @TableField("EMAIL")
-    private String email;
-
-    @TableField("NAME")
-    private String name;
-
-    @TableField("PASSWORD")
-    private String password;
+@TableName("ROOM")
+public class Room {
+    @TableField("ROOMID")
+    private String roomId;
+    @TableField("ROOMTYPE")
+    private Integer roomType;
+    @TableField("PRICE")
+    private String price;
+    @TableField("STATUS")
+    private Integer status;
 }

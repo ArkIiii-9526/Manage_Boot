@@ -7,16 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@TableName("S_USER")
-public class User {
-    @TableField("EMAIL")
-    private String email;
-
+@NoArgsConstructor
+@TableName("CUSTOMER")
+public class Customer {
     @TableField("NAME")
     private String name;
-
-    @TableField("PASSWORD")
-    private String password;
+    @TableField("AGE")
+    private Integer age;
+    @TableField("SEX")
+    private Integer sex;
+    @TableField("PHONE")
+    private String phone;
+    @TableField("IDCARD")
+    private String idCard;
 }

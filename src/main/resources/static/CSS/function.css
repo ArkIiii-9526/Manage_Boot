@@ -1,0 +1,66 @@
+html, body {
+    overflow: hidden;
+}
+
+.background {
+    filter: blur(0px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../Resource/backgroun3.jpg') no-repeat center center fixed;
+    background-size: cover;
+    z-index: 1;
+}
+.header{
+    backdrop-filter: blur(5px);
+}
+
+/* 侧边栏容器 */
+.sidebar-container {
+    display: flex;
+    height: 100vh;
+    padding-top: 80px;
+    box-sizing: border-box;
+}
+
+/* 侧边栏主体 */
+.sidebar {
+    width: 240px;
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-right: 1px solid #eee;
+    padding: 20px 0;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+}
+
+/* 侧边栏菜单项 */
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.sidebar-menu li a:hover {
+    background: rgba(0, 120, 212, 0.1);
+    color: #0078d4;
+}
+
+/* 信息显示区 */
+#info {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* 图标样式 */
+.bx {
+    font-size: 1.2em;
+    vertical-align: middle;
+}

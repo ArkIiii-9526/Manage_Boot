@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>纷蓝</title>
+    <link rel="stylesheet" href="../CSS/framework.css">
+    <link rel="stylesheet" href="../CSS/function.css">
+    <link rel="stylesheet" href="../CSS/roomList.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+<!-- NAVBAR CREATION -->
+<header class="header">
+    <h1>纷蓝酒店管理系统</h1>
+    <nav class="navbar">
+        <a href="#">主页</a>
+        <a href="#">关于我们</a>
+        <a href="#">联系方式</a>
+        <a href="#">帮助</a>
+    </nav>
+</header>
+<div class="background">
+
+    <div class="sidebar-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="function.html"><i class='bx bx-hotel'></i>酒店信息概要</a></li>
+                <li><a href="customerList.html"><i class='bx bx-user'></i>顾客管理</a></li>
+                <li><a href="roomList.html"><i class='bx bx-door-open'></i>房间管理</a></li>
+                <li><a href="#"><i class='bx bx-cog'></i>用户中心</a></li>
+            </ul>
+        </aside>
+        <!-- 内容显示区 -->
+        <div id="info">
+            <div id="app">
+                <!-- 编辑弹窗 -->
+                <div v-if="showEditDialog" class="modal" id="editModal">
+                    <div class="modal-content">
+                        <h3>编辑房间信息</h3>
+                        <form @submit.prevent="submitEdit">
+                            <div class="form-group">
+                                <label>房间号：</label>
+                                <label>
+                                    <input v-model="editingRoom.roomId" required>
+
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>房间类型：</label>
+                                <label>
+                                    <select v-model="editingRoom.roomType" required>
+                                        <option value=1>标准间</option>
+                                        <option value=2>大床房</option>
+                                        <option value=3>套房</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>房间价格：</label>
+                                <label>
+                                    <input v-model="editingRoom.roomPrice" required>
+
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>房间状态：</label>
+                                <label>
+                                    <select v-model="editingRoom.roomStatus" required>
+                                        <option value=0>空闲</option>
+                                        <option value=1>已入住</option>
+                                        <option value=2>维护中</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit" class="btn-save">保存</button>
+                                <button type="button" class="btn-cancel"
+                                        @click="showEditDialog = false">
+                                    取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 搜索栏 -->
+                <div class="toolbar-container">
+                    <div class="search-bar">
+                        <div class="search-group">
+                            <input type="text"
+                                   v-model="searchRoomId"
+                                   placeholder="输入房间ID查询"
+                                   @keyup.enter="handleSearch"
+                                   @input="handleInput">
+                            <button @click="handleSearch">
+                                <i class='bx bx-search'></i>
+                                搜索
+                            </button>
+                        </div>
+                    </div>
+                    <button class="addBtn" @click="addRoom()">
+                        <i class='bx bx-plus'></i>
+                        添加房间
+                    </button>
+                </div>
+
+                <!-- 数据表格 -->
+                <div v-if="loading" class="loading">数据加载中...</div>
+
+                <template v-if="!loading">
+                    <div v-if="totalRecords === 0" class="empty-tip">
+                        未找到匹配的房间信息
+                    </div>
+
+                    <table v-else class="room-table">
+                        <thead>
+                        <tr>
+                            <th>房间号</th>
+                            <th>房间类型</th>
+                            <th>价格</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="Room in Rooms" :key="Room.roomId">
+                            <td>{{ Room.roomId }}</td>
+                            <td>{{ Room.roomType | roomTypeFormat }}</td>
+                            <td>{{ Room.price }}</td>
+                            <td>{{ Room.status | roomStatusFormat }}</td>
+                            <td>
+                                <button @click="editRoom(Room)">编辑</button>
+                            </td>
+                            <td>
+                                <button @click="deleteEdit(Room)">删除</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 分页控件 -->
+                    <div class="pagination">
+                        <button @click="changePage(currentPage - 1)"
+                                :disabled="currentPage === 1"
+                                class="page-btn">
+                            上一页
+                        </button>
+                        <span class="page-info">
+                    第 {{ currentPage }} 页 / 共 {{ totalPages }} 页
+                    （共 {{ totalRecords }} 条记录）
+                </span>
+                        <button @click="changePage(currentPage + 1)"
+                                :disabled="currentPage >= totalPages"
+                                class="page-btn">
+                            下一页
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../JS/roomList.js"></script>
+
+</body>
+
+</html>
