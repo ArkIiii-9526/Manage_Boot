@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>纷蓝</title>
+    <link rel="stylesheet" href="../CSS/framework.css">
+    <link rel="stylesheet" href="../CSS/function.css">
+    <link rel="stylesheet" href="../CSS/customerList.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+<header class="header">
+    <h1>纷蓝酒店管理系统</h1>
+    <nav class="navbar">
+        <a href="#">主页</a>
+        <a href="#">关于我们</a>
+        <a href="#">联系方式</a>
+        <a href="#">帮助</a>
+    </nav>
+</header>
+<div class="background">
+
+    <div class="sidebar-container">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="function.html"><i class='bx bx-hotel'></i>酒店信息概要</a></li>
+                <li><a href="customerList.html"><i class='bx bx-user'></i>顾客管理</a></li>
+                <li><a href="roomList.html"><i class='bx bx-door-open'></i>房间管理</a></li>
+                <li><a href="#"><i class='bx bx-cog'></i>用户中心</a></li>
+            </ul>
+        </aside>
+        <!-- 内容显示区 -->
+        <div id="info">
+            <div id="app">
+                <!-- 编辑弹窗 -->
+                <div v-if="showEditDialog" class="modal" id="editModal">
+                    <div class="modal-content">
+                        <h3>编辑客户信息</h3>
+                        <form @submit.prevent="submitEdit">
+                            <div class="form-group">
+                                <label>姓名：</label>
+                                <input v-model="editingCustomer.name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>性别：</label>
+                                <select v-model="editingCustomer.sex" required>
+                                    <option value=1>男</option>
+                                    <option value=2>女</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>年龄</label>
+                                <input v-model="editingCustomer.age" required>
+                            </div>
+                            <div class="form-group">
+                                <label>身份证号：</label>
+                                <input v-model="editingCustomer.idCard"
+                                       pattern="\d{17}[\dX]"
+                                       title="请输入18位有效身份证号"
+                                       required>
+                            </div>
+                            <div class="form-group">
+                                <label>电话：</label>
+                                <input v-model="editingCustomer.phone"
+                                       pattern="\d{11}"
+                                       title="请输入11位有效手机号"
+                                       required>
+                            </div>
+
+                            <div class="button-group">
+                                <button type="submit" class="btn-save">保存</button>
+                                <button type="button" class="btn-cancel"
+                                        @click="showEditDialog = false">
+                                    取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 搜索栏 -->
+                <div class="toolbar-container">
+                    <div class="search-bar">
+                        <div class="search-group">
+                            <input type="text"
+                                   v-model="searchName"
+                                   placeholder="输入姓名查询"
+                                   @keyup.enter="handleSearch"
+                                   @input="handleInput">
+                            <button @click="handleSearch">
+                                <i class='bx bx-search'></i>
+                                搜索
+                            </button>
+                        </div>
+                    </div>
+                    <button class="addBtn" @click="addCustomer()">
+                        <i class='bx bx-plus'></i>
+                        添加顾客
+                    </button>
+                </div>
+
+                <!-- 数据表格 -->
+                <div v-if="loading" class="loading">数据加载中...</div>
+
+                <template v-if="!loading">
+                    <div v-if="totalRecords === 0" class="empty-tip">
+                        未找到匹配的顾客信息
+                    </div>
+
+                    <table v-else class="customer-table">
+                        <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>年龄</th>
+                            <th>性别</th>
+                            <th>联系电话</th>
+                            <th>身份证号</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="customer in customers" :key="customer.id">
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.age }}</td>
+                            <td>{{ customer.sex | genderFormat }}</td>
+                            <td>{{ customer.phone }}</td>
+                            <td>{{ customer.idCard | idCardFilter }}</td>
+                            <td>
+                                <button @click="editCustomer(customer)">编辑</button>
+                            </td>
+                            <td>
+                                <button @click="deleteEdit(customer)">删除</button>
+                            </td>
+                        </tr>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 分页控件 -->
+                    <div class="pagination">
+                        <button @click="changePage(currentPage - 1)"
+                                :disabled="currentPage === 1"
+                                class="page-btn">
+                            上一页
+                        </button>
+                        <span class="page-info">
+                    第 {{ currentPage }} 页 / 共 {{ totalPages }} 页
+                    （共 {{ totalRecords }} 条记录）
+                </span>
+                        <button @click="changePage(currentPage + 1)"
+                                :disabled="currentPage >= totalPages"
+                                class="page-btn">
+                            下一页
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../JS/customerList.js"></script>
+
+</body>
+
+</html>

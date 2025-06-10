@@ -1,0 +1,213 @@
+/* roomList.css - 优化版本 */
+
+/* ======== 全局统一样式 ======== */
+/* 颜色定义 */
+:root {
+    --primary-color: #409eff;       /* 主色调-蓝 */
+    --success-color: #67c23a;       /* 成功色-绿 */
+    --danger-color: #f56c6c;        /* 危险色-红 */
+    --text-primary: #303133;        /* 主要文字 */
+    --text-regular: #606266;        /* 常规文字 */
+    --border-color: #dcdfe6;        /* 边框色 */
+    --background-base: #f5f7fa;     /* 基础背景 */
+}
+
+/* ======== 表格样式 ======== */
+.room-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: white;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+}
+
+.room-table th,
+.room-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-regular);
+}
+
+.room-table th {
+    background-color: var(--background-base);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ======== 按钮统一样式 ======== */
+button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(.645,.045,.355,1);
+    font-size: 14px;
+}
+
+/* 主按钮样式 */
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+.btn-primary:hover {
+    background: #66b1ff;
+}
+
+/* 成功按钮 */
+.btn-success {
+    background: var(--success-color);
+    color: white;
+}
+.btn-success:hover {
+    background: #85ce61;
+}
+
+/* 危险按钮 */
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+}
+.btn-danger:hover {
+    background: #f78989;
+}
+
+/* ======== 工具栏布局 ======== */
+.toolbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+.search-group {
+    display: flex;
+    flex-grow: 1;
+    max-width: 400px;
+    gap: 10px;
+}
+
+.search-group input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.search-group input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* ======== 分页样式 ======== */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px;
+    background: white;
+    margin: 20px 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+}
+
+.page-info {
+    color: var(--text-regular);
+    font-size: 14px;
+}
+
+/* ======== 弹窗样式 ======== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.form-group {
+    margin: 18px 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+/* ======== 状态提示 ======== */
+.loading {
+    padding: 30px;
+    text-align: center;
+    color: var(--text-regular);
+}
+
+.empty-tip {
+    padding: 40px;
+    background: var(--background-base);
+    color: var(--text-regular);
+    border-radius: 4px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* ======== 添加按钮特化样式 ======== */
+.addBtn {
+    background: var(--success-color);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.addBtn:hover {
+    background: #5daf34;
+}
+.addBtn i {
+    font-size: 16px;
+}
+
+/* ======== 操作按钮组 ======== */
+.customer-table button {
+    padding: 6px 12px;
+    margin: 0 4px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .toolbar-container {
+        flex-direction: column;
+    }
+
+    .search-group {
+        width: 100%;
+        max-width: none;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
