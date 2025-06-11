@@ -25,10 +25,34 @@ new Vue({
             }, 300);
         },
 
+        showAlert(title, message = "", icon = 'error') {
+            const config = {
+                title: title,
+                text: message,
+                icon: icon,
+                timerProgressBar: true,
+                showConfirmButton: icon === 'error'
+            };
+
+            // 成功提示自动关闭
+            if (icon === 'success') {
+                config.timer = 2000;
+                config.showConfirmButton = false;
+            }
+            // 错误提示手动关闭
+            else {
+                config.showConfirmButton = true;
+            }
+
+            Swal.fire(config);
+        },
+
         // 执行搜索
         handleSearch() {
             this.currentPage = 1;
-            this.fetchCustomers();
+            this.fetchCustomers().then(r => {
+                console.log();
+            });
         },
 
         // 获取数据
@@ -42,19 +66,17 @@ new Vue({
                 };
 
                 const response = await axios.get('/api/customers', {params});
-                if (response.data.code === 200) {
-                    const data = response.data.data;
-                    this.customers = data.list;
-                    this.currentPage = data.currentPage;
-                    this.totalPages = data.totalPages;
-                    this.totalRecords = data.totalRecords;
-                } else {
-                    console.error('请求失败:', response.data.msg);
+                if (response.data.success) {
+                    const result = response.data.data;
+                    this.customers = result.customers;
+                    this.currentPage = result.currentPage;
+                    this.totalPages = result.totalPages;
+                    this.totalRecords = result.totalRecords;
                 }
             } catch (error) {
-                console.error('请求错误:', error);
-                alert('数据加载失败，请检查网络');
-            } finally {
+                const message = error.response?.data?.message || error.message;
+                this.showAlert('操作失败', message);
+            }finally {
                 this.loading = false;
             }
         },
@@ -85,43 +107,52 @@ new Vue({
                 let response;
                 if (this.isEditMode) {
                     // 更新请求
-                    response = await axios.put('/api/editCustomers/${this.editingCustomer.idCard}', this.editingCustomer);
+                    response = await axios.put(`/api/editCustomers/${this.editingCustomer.idCard}`, this.editingCustomer);
                 } else {
                     // 新增请求
                     response = await axios.post('/api/addCustomers', this.editingCustomer);
                 }
 
-                if (response.data.code === 200) {
+                if (response.data.success) {
+                    this.showAlert('操作成功', '客户信息已更新', 'success');
                     this.showEditDialog = false;
-                    await this.fetchCustomers();
-                    Swal.fire({
-                        title: this.isEditMode ? '修改成功' : '添加成功',
-                        timer: 1000,
-                        timerProgressBar: true,
-                        showConfirmButton: false
+                    this.fetchCustomers().catch(e => {
+                        console.error("后台刷新失败:", e);
                     });
-                } else {
-                    alert(response.data.msg);
+                }else {
+                    this.showAlert('操作失败', response.data.message);
                 }
             } catch (error) {
-                console.error('操作失败:', error);
-                alert(`操作失败: ${error.response?.data?.message || '系统错误'}`);
+                const message = error.response?.data?.message || error.message;
+                this.showAlert('操作失败', message);
             }
         },
 
         //删除顾客
         async deleteEdit(customer) {
-            if (!confirm('确定要删除该客户吗？')) return;
+            const result = await Swal.fire({
+                title: '确定删除？',
+                text: `确定要删除客户 ${customer.name} 吗？此操作不可恢复`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '确定删除',
+                cancelButtonText: '取消'
+            });
+            if (!result.isConfirmed) return;
 
             try {
                 const response = await axios.delete(`/api/deleteCustomers/${customer.idCard}`);
-                if (response.data.code === 200) {
+                if (response.data.success) {
                     await this.fetchCustomers();
-                    alert('删除成功');
+                    this.showAlert('成功', '客户已删除', 'success');
+                }else{
+                    this.showAlert('删除失败', response.data.message);
                 }
             } catch (error) {
-                console.error('删除失败:', error);
-                alert('删除失败，请稍后重试');
+                const message = error.response?.data?.message || error.message;
+                this.showAlert('操作失败', message);
             }
         },
         // 分页切换
