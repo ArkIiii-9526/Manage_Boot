@@ -1,6 +1,7 @@
 package com.manage.boot.service.Impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.manage.boot.mappers.UserMapper;
 import com.manage.boot.pojo.User;
 import com.manage.boot.service.UserService;
@@ -8,16 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
     UserMapper userMapper;
-    QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+
     @Autowired
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
     @Override
     public User selectUserByEmail(String email) {
-        queryWrapper.eq("email",email);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail,email);
         return userMapper.selectOne(queryWrapper);
     }
 
@@ -28,7 +30,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserExist(String email) {
-        queryWrapper.eq("email",email);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail,email);
         return userMapper.selectOne(queryWrapper) != null;
     }
 }

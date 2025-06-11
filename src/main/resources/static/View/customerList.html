@@ -145,9 +145,8 @@
                             上一页
                         </button>
                         <span class="page-info">
-                    第 {{ currentPage }} 页 / 共 {{ totalPages }} 页
-                    （共 {{ totalRecords }} 条记录）
-                </span>
+                            第 {{ currentPage }} 页 / 共 {{ totalPages }} 页（共 {{ totalRecords }} 条记录）
+                        </span>
                         <button @click="changePage(currentPage + 1)"
                                 :disabled="currentPage >= totalPages"
                                 class="page-btn">

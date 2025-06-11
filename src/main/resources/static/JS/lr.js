@@ -147,7 +147,7 @@ new Vue({
             })
                 .then(response => {
                     if (response.data.success) {
-                        window.location.href = '/View/lr.html';
+                        window.location.href = '../index.html';
                     } else {
                         this.showGlobalError(response.data.message || '注册失败');
                     }
