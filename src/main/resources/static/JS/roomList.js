@@ -1,4 +1,4 @@
-var app = new Vue({
+new Vue({
     el: '#app',
     data: {
         searchRoomId: '',
@@ -31,6 +31,23 @@ var app = new Vue({
             this.fetchRooms();
         },
 
+        ShowAlert(title, message = '', icon = 'error') {
+            const config = {
+                title: title,
+                text: message,
+                icon: icon,
+                timerProgressBar: true,
+                showConfirmButton: icon === 'error'
+            };
+            if (icon === 'success') {
+                config.timer = 2000;
+                config.showConfirmButton = false;
+            } else {
+                config.showConfirmButton = true;
+            }
+            Swal.fire(config);
+        },
+
         // 获取数据
         async fetchRooms() {
             this.loading = true;
@@ -42,24 +59,21 @@ var app = new Vue({
                 };
 
                 const response = await axios.get('/api/rooms', {params});
-                if (response.data.code === 200) {
-                    const data = response.data.data;
-                    this.Rooms = data.list;
-                    this.currentPage = data.currentPage;
-                    this.totalPages = data.totalPages;
-                    this.totalRecords = data.totalRecords;
-                } else {
-                    console.error('请求失败:', response.data.msg);
+                if (response.data.success) {
+                    const result = response.data.data;
+                    this.rooms = result.rooms;
+                    this.currentPage = result.currentPage;
+                    this.totalPages = result.totalPages;
+                    this.totalRecords = result.totalRecords;
                 }
             } catch (error) {
-                console.error('请求错误:', error);
-                alert('数据加载失败，请检查网络');
+                const message = error.response?.data?.message || error.message;
+                this.showAlert('操作失败', message);
             } finally {
                 this.loading = false;
             }
         },
 
-        // 添加顾客
         addRoom() {
             this.isEditMode = false;
             this.editingRoom = {
@@ -71,14 +85,12 @@ var app = new Vue({
             this.showEditDialog = true;
         },
 
-        // 编辑顾客
         editRoom(Room) {
             this.isEditMode = true;
             this.editingRoom = {...Room};
             this.showEditDialog = true;
         },
 
-        //判断并提交表单
         async submitEdit() {
             try {
                 let response;
@@ -90,36 +102,43 @@ var app = new Vue({
                     response = await axios.post('/api/addRooms', this.editingRoom);
                 }
 
-                if (response.data.code === 200) {
+                if (response.data.success) {
+                    this.showAlert('操作成功', '房间信息已更新', 'success');
                     this.showEditDialog = false;
-                    await this.fetchRooms();
-                    Swal.fire({
-                        title: this.isEditMode ? '修改成功' : '添加成功',
-                        timer: 1000,
-                        timerProgressBar: true,
-                        showConfirmButton: false
-                    });
+                    this.fetchRooms().catch(error => {
+                        console.error('获取房间列表失败:', error);
+                    })
                 } else {
-                    alert(response.data.msg);
+                    this.showAlert('操作失败', response.data.message);
                 }
             } catch (error) {
-                console.error('操作失败:', error);
-                alert(`操作失败: ${error.response?.data?.message || '系统错误'}`);
+                const message = error.response?.data?.message || error.message;
+                this.showAlert('操作失败', message);
             }
         },
 
         //删除顾客
-        async deleteEdit(Room) {
-            if (!confirm('确定要删除该房间吗？')) return;
+        async deleteEdit(room) {
+            const result = await Swal.fire({
+                title: '确定删除？',
+                text: `确定要删除房间 ${room.roomId} 吗？此操作不可恢复`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '确定删除',
+                cancelButtonText: '取消'
+            });
+            if (!result.isConfirmed) return;
             try {
                 const response = await axios.delete(`/api/deleteRooms/${Room.roomId}`);
-                if (response.data.code === 200) {
+                if (response.data.success) {
                     await this.fetchRooms();
-                    Swal.fire('删除成功', '', 'success');
+                    this.showAlert('操作成功', '房间已删除', 'success');
                 }
             } catch (error) {
-                console.error('删除失败:', error);
-                alert('删除失败，请稍后重试');
+                const message = error.response?.data?.message || error.message;
+                this.showAlert('操作失败', message);
             }
         },
         // 分页切换

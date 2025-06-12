@@ -9,7 +9,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-<!-- NAVBAR CREATION -->
 <header class="header">
     <h1>纷蓝酒店管理系统</h1>
     <nav class="navbar">
@@ -123,15 +122,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="Room in Rooms" :key="Room.roomId">
-                            <td>{{ Room.roomId }}</td>
-                            <td>{{ Room.roomType | roomTypeFormat }}</td>
-                            <td>{{ Room.price }}</td>
-                            <td>{{ Room.status | roomStatusFormat }}</td>
+                        <tr v-for="room in rooms" :key="room.roomId">
+                            <td>{{ room.roomId }}</td>
+                            <td>{{ room.roomType | roomTypeFormat }}</td>
+                            <td>{{ room.price }}</td>
+                            <td>{{ room.status | roomStatusFormat }}</td>
                             <td>
                                 <button @click="editRoom(Room)">编辑</button>
-                            </td>
-                            <td>
                                 <button @click="deleteEdit(Room)">删除</button>
                             </td>
                         </tr>

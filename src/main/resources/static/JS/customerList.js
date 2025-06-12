@@ -141,7 +141,6 @@ new Vue({
                 cancelButtonText: '取消'
             });
             if (!result.isConfirmed) return;
-
             try {
                 const response = await axios.delete(`/api/deleteCustomers/${customer.idCard}`);
                 if (response.data.success) {
