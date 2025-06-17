@@ -31,14 +31,90 @@
         </aside>
         <!-- 内容显示区 -->
         <div id="info">
+            <div id="app">
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class='bx bx-user'></i></div>
+                        <div class="stat-value">{{ todayGuests }}</div>
+                        <div class="stat-label">今日入住顾客</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class='bx bx-bed'></i></div>
+                        <div class="stat-value">{{ availableRooms }}</div>
+                        <div class="stat-label">可入住房间</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class='bx bx-calendar-event'></i></div>
+                        <div class="stat-value">{{ upcomingReservations }}</div>
+                        <div class="stat-label">未来7天预订</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class='bx bx-star'></i></div>
+                        <div class="stat-value">{{ vipGuests }}</div>
+                        <div class="stat-label">VIP客户</div>
+                    </div>
+                </div>
 
+                <div class="dashboard-header">
+                    <h2><i class='bx bx-stats'></i> 酒店运营概览</h2>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stats-card">
+                        <div class="card-header">
+                            <h3><div class="icon"><i class='bx bx-user'></i></div> 顾客入住趋势</h3>
+                            <span class="unread-badge">最近7天</span>
+                        </div>
+                        <div class="chart-container" id="customer-chart"></div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="card-header">
+                            <h3><div class="icon"><i class='bx bx-door-open'></i></div> 房间状态分布</h3>
+                            <span class="unread-badge">实时数据</span>
+                        </div>
+                        <div class="chart-container" id="room-chart"></div>
+                    </div>
+                </div>
+
+                <div class="messages-container">
+                    <div class="messages-header">
+                        <h3><i class='bx bx-message-dots'></i> 最新消息</h3>
+                        <span class="unread-badge">{{ unreadCount }} 条未读</span>
+                    </div>
+
+                    <div class="messages-content">
+                        <div v-for="(msg, index) in messages" :key="index"
+                             class="message-item"
+                             :class="{unread: !msg.read}"
+                             @click="markAsRead(index)">
+                            <div class="message-avatar">{{ msg.sender.charAt(0) }}</div>
+                            <div class="message-content">
+                                <div class="message-title">
+                                    <span class="sender">{{ msg.sender }}</span>
+                                    <span class="time">{{ msg.time }}</span>
+                                </div>
+                                <div class="message-text">
+                                    {{ msg.content }}
+                                </div>
+                            </div>
+                            <div class="message-actions">
+                                <button @click.stop="markAsRead(index)"><i class='bx bx-check'></i></button>
+                                <button @click.stop="deleteMessage(index)"><i class='bx bx-trash'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>）
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../JS/function.js"></script>
 
 </body>
 
