@@ -1,8 +1,8 @@
 package com.manage.boot.controller;
 
-import com.manage.boot.doto.APIResponse;
-import com.manage.boot.doto.LoginRequest;
-import com.manage.boot.doto.RegisterRequest;
+import com.manage.boot.dto.APIResponse;
+import com.manage.boot.dto.LoginRequest;
+import com.manage.boot.dto.RegisterRequest;
 import com.manage.boot.pojo.User;
 import com.manage.boot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
