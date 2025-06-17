@@ -2,8 +2,8 @@ package com.manage.boot.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.manage.boot.doto.APIResponse;
-import com.manage.boot.doto.RoomPageResult;
+import com.manage.boot.dto.APIResponse;
+import com.manage.boot.dto.RoomPageResult;
 import com.manage.boot.pojo.Room;
 import com.manage.boot.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;

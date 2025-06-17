@@ -1,4 +1,4 @@
-package com.manage.boot.doto;
+package com.manage.boot.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
